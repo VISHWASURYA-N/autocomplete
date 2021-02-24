@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React ,{ useEffect, useState } from 'react';
+import Userdetails from './component/userdata';
 function App() {
+  const [details,setDetails]=useState(null)
+ const [display, setDisplay] = useState(false)
+const [search, setSearch] = useState("")
+  const getData=async()=>{
+    const response=await fetch('http://localhost:8000/details');
+    const data=await response.json();
+    console.log(data)
+    setDetails(data)
+  }
+  useEffect(()=>{
+    getData()
+  },[])
+ 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
+       <div>
+            <input type="search" name="search" value={search} id=" search" onClick={()=>(setDisplay(!display))} placeholder="search users by ID adresss,nam.." onChange={(e)=>{setSearch(e.target.value)}}/>
+        </div>
+        <div>
+        {details && display && <Userdetails details={details.filter(detail=>(
+          detail.name.includes(search)|| 
+          detail.id.includes(search) ||
+          detail.address.includes(search) ||
+         console.log( detail.items.filter(item=>(item)).filter(term=>(term.includes(search))))
+         
+          ))} />}
+        </div>
+  
     </div>
   );
+ 
 }
 
 export default App;
