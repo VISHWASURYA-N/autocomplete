@@ -3,10 +3,10 @@ const Userdetails = ({details}) => {
     console.log(details)
    if(details.length){
     return ( 
-        <div className="scroll">
+        <div  className="scroll">
             {details.map(detail=>(
-               <ul className="items">
-                   <li>
+               <ul tabIndex="0" key={detail.id} className="items">
+                   <li >
                        <h3>{detail.id}</h3>
                        <h4>{detail.name}</h4>
                        <p> {detail.items.map(item=>(

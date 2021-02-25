@@ -1,26 +1,42 @@
-import React ,{ useEffect, useState } from 'react';
+import React ,{ useEffect, useState ,useRef} from 'react';
+import Searchinput from './component/searchform';
 import Userdetails from './component/userdata';
 function App() {
-  const [details,setDetails]=useState(null)
- const [display, setDisplay] = useState(false)
-const [search, setSearch] = useState("")
+  const [details,setDetails]=useState(null);
+ const [display, setDisplay] = useState(false);
+const [search, setSearch] = useState("");
+const wrapperRef= useRef(null);
   const getData=async()=>{
     const response=await fetch('http://localhost:8000/details');
     const data=await response.json();
-    console.log(data)
     setDetails(data)
   }
   useEffect(()=>{
     getData()
+  
   },[])
+  useEffect(()=>{
+    window.addEventListener("mousedown",handleClickOutside);
+    return ()=>{
+      window.removeEventListener("mousedown",handleClickOutside)
+    }
+  },[]);
+  const handleClickOutside=event=>{
+    if(wrapperRef.current && !wrapperRef.current.contains(event.target)){
+      setDisplay(false)
+    } 
+   }
+  let displayDetails=(data,input)=>{
+    setDisplay(data)
+    setSearch(input)
+  
+
+}
  
   return (
     <div className="App">
-      
-       <div>
-            <input type="search" name="search" value={search} id=" search" onClick={()=>(setDisplay(!display))} placeholder="search users by ID adresss,nam.." onChange={(e)=>{setSearch(e.target.value)}}/>
-        </div>
-        <div>
+      <Searchinput displayDetails={ displayDetails}/>
+        <div  ref={wrapperRef} >
         {details && display && <Userdetails details={details.filter(detail=>(
           detail.name.includes(search)|| 
           detail.id.includes(search) ||
